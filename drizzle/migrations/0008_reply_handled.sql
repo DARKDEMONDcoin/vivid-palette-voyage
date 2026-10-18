@@ -1,0 +1,2 @@
+ALTER TABLE public.replies ADD COLUMN handled boolean NOT NULL DEFAULT false;
+CREATE POLICY "edit replies" ON public.replies FOR UPDATE TO authenticated USING (public.can_edit_campaign(campaign_id)) WITH CHECK (public.can_edit_campaign(campaign_id));

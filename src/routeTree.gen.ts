@@ -10,33 +10,330 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as AuthenticatedAgentsRouteImport } from './routes/_authenticated/agents'
+import { Route as AuthenticatedAnalyticsRouteImport } from './routes/_authenticated/analytics'
+import { Route as AuthenticatedCampaignsRouteImport } from './routes/_authenticated/campaigns'
+import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedInboxRouteImport } from './routes/_authenticated/inbox'
+import { Route as AuthenticatedIntegrationsRouteImport } from './routes/_authenticated/integrations'
+import { Route as AuthenticatedLeadsRouteImport } from './routes/_authenticated/leads'
+import { Route as AuthenticatedOrganizationsRouteImport } from './routes/_authenticated/organizations'
+import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
+import { Route as AuthenticatedAgentsIndexRouteImport } from './routes/_authenticated/agents.index'
+import { Route as AuthenticatedAgentsAgentIdRouteImport } from './routes/_authenticated/agents.$agentId'
+import { Route as AuthenticatedAgentsNewRouteImport } from './routes/_authenticated/agents.new'
+import { Route as AuthenticatedCampaignsIndexRouteImport } from './routes/_authenticated/campaigns.index'
+import { Route as AuthenticatedCampaignsCampaignIdRouteImport } from './routes/_authenticated/campaigns.$campaignId'
+import { Route as AuthenticatedCampaignsNewRouteImport } from './routes/_authenticated/campaigns.new'
+import { Route as AuthenticatedOrganizationsIndexRouteImport } from './routes/_authenticated/organizations.index'
+import { Route as AuthenticatedOrganizationsOrgIdRouteImport } from './routes/_authenticated/organizations.$orgId'
+import { Route as ApiPublicMailboxReturnRouteImport } from './routes/api/public/mailbox-return'
+import { Route as ApiPublicSequenceTickRouteImport } from './routes/api/public/sequence-tick'
+import { Route as ApiPublicVapiWebhookRouteImport } from './routes/api/public/vapi-webhook'
+import { Route as ApiPublicV1LeadsRouteImport } from './routes/api/public/v1/leads'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedAgentsRoute = AuthenticatedAgentsRouteImport.update({
+  id: '/agents',
+  path: '/agents',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedAnalyticsRoute = AuthenticatedAnalyticsRouteImport.update({
+  id: '/analytics',
+  path: '/analytics',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedCampaignsRoute = AuthenticatedCampaignsRouteImport.update({
+  id: '/campaigns',
+  path: '/campaigns',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedInboxRoute = AuthenticatedInboxRouteImport.update({
+  id: '/inbox',
+  path: '/inbox',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedIntegrationsRoute =
+  AuthenticatedIntegrationsRouteImport.update({
+    id: '/integrations',
+    path: '/integrations',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedLeadsRoute = AuthenticatedLeadsRouteImport.update({
+  id: '/leads',
+  path: '/leads',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedOrganizationsRoute =
+  AuthenticatedOrganizationsRouteImport.update({
+    id: '/organizations',
+    path: '/organizations',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedAgentsIndexRoute =
+  AuthenticatedAgentsIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedAgentsRoute,
+  } as any)
+const AuthenticatedAgentsAgentIdRoute =
+  AuthenticatedAgentsAgentIdRouteImport.update({
+    id: '/$agentId',
+    path: '/$agentId',
+    getParentRoute: () => AuthenticatedAgentsRoute,
+  } as any)
+const AuthenticatedAgentsNewRoute = AuthenticatedAgentsNewRouteImport.update({
+  id: '/new',
+  path: '/new',
+  getParentRoute: () => AuthenticatedAgentsRoute,
+} as any)
+const AuthenticatedCampaignsIndexRoute =
+  AuthenticatedCampaignsIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedCampaignsRoute,
+  } as any)
+const AuthenticatedCampaignsCampaignIdRoute =
+  AuthenticatedCampaignsCampaignIdRouteImport.update({
+    id: '/$campaignId',
+    path: '/$campaignId',
+    getParentRoute: () => AuthenticatedCampaignsRoute,
+  } as any)
+const AuthenticatedCampaignsNewRoute =
+  AuthenticatedCampaignsNewRouteImport.update({
+    id: '/new',
+    path: '/new',
+    getParentRoute: () => AuthenticatedCampaignsRoute,
+  } as any)
+const AuthenticatedOrganizationsIndexRoute =
+  AuthenticatedOrganizationsIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedOrganizationsRoute,
+  } as any)
+const AuthenticatedOrganizationsOrgIdRoute =
+  AuthenticatedOrganizationsOrgIdRouteImport.update({
+    id: '/$orgId',
+    path: '/$orgId',
+    getParentRoute: () => AuthenticatedOrganizationsRoute,
+  } as any)
+const ApiPublicMailboxReturnRoute = ApiPublicMailboxReturnRouteImport.update({
+  id: '/api/public/mailbox-return',
+  path: '/api/public/mailbox-return',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicSequenceTickRoute = ApiPublicSequenceTickRouteImport.update({
+  id: '/api/public/sequence-tick',
+  path: '/api/public/sequence-tick',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicVapiWebhookRoute = ApiPublicVapiWebhookRouteImport.update({
+  id: '/api/public/vapi-webhook',
+  path: '/api/public/vapi-webhook',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicV1LeadsRoute = ApiPublicV1LeadsRouteImport.update({
+  id: '/api/public/v1/leads',
+  path: '/api/public/v1/leads',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/agents': typeof AuthenticatedAgentsRouteWithChildren
+  '/analytics': typeof AuthenticatedAnalyticsRoute
+  '/campaigns': typeof AuthenticatedCampaignsRouteWithChildren
+  '/dashboard': typeof AuthenticatedDashboardRoute
+  '/inbox': typeof AuthenticatedInboxRoute
+  '/integrations': typeof AuthenticatedIntegrationsRoute
+  '/leads': typeof AuthenticatedLeadsRoute
+  '/organizations': typeof AuthenticatedOrganizationsRouteWithChildren
+  '/settings': typeof AuthenticatedSettingsRoute
+  '/agents/$agentId': typeof AuthenticatedAgentsAgentIdRoute
+  '/agents/new': typeof AuthenticatedAgentsNewRoute
+  '/campaigns/$campaignId': typeof AuthenticatedCampaignsCampaignIdRoute
+  '/campaigns/new': typeof AuthenticatedCampaignsNewRoute
+  '/organizations/$orgId': typeof AuthenticatedOrganizationsOrgIdRoute
+  '/api/public/mailbox-return': typeof ApiPublicMailboxReturnRoute
+  '/api/public/sequence-tick': typeof ApiPublicSequenceTickRoute
+  '/api/public/vapi-webhook': typeof ApiPublicVapiWebhookRoute
+  '/agents/': typeof AuthenticatedAgentsIndexRoute
+  '/campaigns/': typeof AuthenticatedCampaignsIndexRoute
+  '/organizations/': typeof AuthenticatedOrganizationsIndexRoute
+  '/api/public/v1/leads': typeof ApiPublicV1LeadsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/analytics': typeof AuthenticatedAnalyticsRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
+  '/inbox': typeof AuthenticatedInboxRoute
+  '/integrations': typeof AuthenticatedIntegrationsRoute
+  '/leads': typeof AuthenticatedLeadsRoute
+  '/settings': typeof AuthenticatedSettingsRoute
+  '/agents/$agentId': typeof AuthenticatedAgentsAgentIdRoute
+  '/agents/new': typeof AuthenticatedAgentsNewRoute
+  '/campaigns/$campaignId': typeof AuthenticatedCampaignsCampaignIdRoute
+  '/campaigns/new': typeof AuthenticatedCampaignsNewRoute
+  '/organizations/$orgId': typeof AuthenticatedOrganizationsOrgIdRoute
+  '/api/public/mailbox-return': typeof ApiPublicMailboxReturnRoute
+  '/api/public/sequence-tick': typeof ApiPublicSequenceTickRoute
+  '/api/public/vapi-webhook': typeof ApiPublicVapiWebhookRoute
+  '/agents': typeof AuthenticatedAgentsIndexRoute
+  '/campaigns': typeof AuthenticatedCampaignsIndexRoute
+  '/organizations': typeof AuthenticatedOrganizationsIndexRoute
+  '/api/public/v1/leads': typeof ApiPublicV1LeadsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/auth': typeof AuthRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/_authenticated/agents': typeof AuthenticatedAgentsRouteWithChildren
+  '/_authenticated/analytics': typeof AuthenticatedAnalyticsRoute
+  '/_authenticated/campaigns': typeof AuthenticatedCampaignsRouteWithChildren
+  '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/inbox': typeof AuthenticatedInboxRoute
+  '/_authenticated/integrations': typeof AuthenticatedIntegrationsRoute
+  '/_authenticated/leads': typeof AuthenticatedLeadsRoute
+  '/_authenticated/organizations': typeof AuthenticatedOrganizationsRouteWithChildren
+  '/_authenticated/settings': typeof AuthenticatedSettingsRoute
+  '/_authenticated/agents/$agentId': typeof AuthenticatedAgentsAgentIdRoute
+  '/_authenticated/agents/new': typeof AuthenticatedAgentsNewRoute
+  '/_authenticated/campaigns/$campaignId': typeof AuthenticatedCampaignsCampaignIdRoute
+  '/_authenticated/campaigns/new': typeof AuthenticatedCampaignsNewRoute
+  '/_authenticated/organizations/$orgId': typeof AuthenticatedOrganizationsOrgIdRoute
+  '/api/public/mailbox-return': typeof ApiPublicMailboxReturnRoute
+  '/api/public/sequence-tick': typeof ApiPublicSequenceTickRoute
+  '/api/public/vapi-webhook': typeof ApiPublicVapiWebhookRoute
+  '/_authenticated/agents/': typeof AuthenticatedAgentsIndexRoute
+  '/_authenticated/campaigns/': typeof AuthenticatedCampaignsIndexRoute
+  '/_authenticated/organizations/': typeof AuthenticatedOrganizationsIndexRoute
+  '/api/public/v1/leads': typeof ApiPublicV1LeadsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/reset-password'
+    | '/agents'
+    | '/analytics'
+    | '/campaigns'
+    | '/dashboard'
+    | '/inbox'
+    | '/integrations'
+    | '/leads'
+    | '/organizations'
+    | '/settings'
+    | '/agents/$agentId'
+    | '/agents/new'
+    | '/campaigns/$campaignId'
+    | '/campaigns/new'
+    | '/organizations/$orgId'
+    | '/api/public/mailbox-return'
+    | '/api/public/sequence-tick'
+    | '/api/public/vapi-webhook'
+    | '/agents/'
+    | '/campaigns/'
+    | '/organizations/'
+    | '/api/public/v1/leads'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/auth'
+    | '/reset-password'
+    | '/analytics'
+    | '/dashboard'
+    | '/inbox'
+    | '/integrations'
+    | '/leads'
+    | '/settings'
+    | '/agents/$agentId'
+    | '/agents/new'
+    | '/campaigns/$campaignId'
+    | '/campaigns/new'
+    | '/organizations/$orgId'
+    | '/api/public/mailbox-return'
+    | '/api/public/sequence-tick'
+    | '/api/public/vapi-webhook'
+    | '/agents'
+    | '/campaigns'
+    | '/organizations'
+    | '/api/public/v1/leads'
+  id:
+    | '__root__'
+    | '/'
+    | '/_authenticated'
+    | '/auth'
+    | '/reset-password'
+    | '/_authenticated/agents'
+    | '/_authenticated/analytics'
+    | '/_authenticated/campaigns'
+    | '/_authenticated/dashboard'
+    | '/_authenticated/inbox'
+    | '/_authenticated/integrations'
+    | '/_authenticated/leads'
+    | '/_authenticated/organizations'
+    | '/_authenticated/settings'
+    | '/_authenticated/agents/$agentId'
+    | '/_authenticated/agents/new'
+    | '/_authenticated/campaigns/$campaignId'
+    | '/_authenticated/campaigns/new'
+    | '/_authenticated/organizations/$orgId'
+    | '/api/public/mailbox-return'
+    | '/api/public/sequence-tick'
+    | '/api/public/vapi-webhook'
+    | '/_authenticated/agents/'
+    | '/_authenticated/campaigns/'
+    | '/_authenticated/organizations/'
+    | '/api/public/v1/leads'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AuthRoute: typeof AuthRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
+  ApiPublicMailboxReturnRoute: typeof ApiPublicMailboxReturnRoute
+  ApiPublicSequenceTickRoute: typeof ApiPublicSequenceTickRoute
+  ApiPublicVapiWebhookRoute: typeof ApiPublicVapiWebhookRoute
+  ApiPublicV1LeadsRoute: typeof ApiPublicV1LeadsRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +345,263 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/agents': {
+      id: '/_authenticated/agents'
+      path: '/agents'
+      fullPath: '/agents'
+      preLoaderRoute: typeof AuthenticatedAgentsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/analytics': {
+      id: '/_authenticated/analytics'
+      path: '/analytics'
+      fullPath: '/analytics'
+      preLoaderRoute: typeof AuthenticatedAnalyticsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/campaigns': {
+      id: '/_authenticated/campaigns'
+      path: '/campaigns'
+      fullPath: '/campaigns'
+      preLoaderRoute: typeof AuthenticatedCampaignsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dashboard': {
+      id: '/_authenticated/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AuthenticatedDashboardRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/inbox': {
+      id: '/_authenticated/inbox'
+      path: '/inbox'
+      fullPath: '/inbox'
+      preLoaderRoute: typeof AuthenticatedInboxRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/integrations': {
+      id: '/_authenticated/integrations'
+      path: '/integrations'
+      fullPath: '/integrations'
+      preLoaderRoute: typeof AuthenticatedIntegrationsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/leads': {
+      id: '/_authenticated/leads'
+      path: '/leads'
+      fullPath: '/leads'
+      preLoaderRoute: typeof AuthenticatedLeadsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/organizations': {
+      id: '/_authenticated/organizations'
+      path: '/organizations'
+      fullPath: '/organizations'
+      preLoaderRoute: typeof AuthenticatedOrganizationsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/settings': {
+      id: '/_authenticated/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof AuthenticatedSettingsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/agents/': {
+      id: '/_authenticated/agents/'
+      path: '/'
+      fullPath: '/agents/'
+      preLoaderRoute: typeof AuthenticatedAgentsIndexRouteImport
+      parentRoute: typeof AuthenticatedAgentsRoute
+    }
+    '/_authenticated/agents/$agentId': {
+      id: '/_authenticated/agents/$agentId'
+      path: '/$agentId'
+      fullPath: '/agents/$agentId'
+      preLoaderRoute: typeof AuthenticatedAgentsAgentIdRouteImport
+      parentRoute: typeof AuthenticatedAgentsRoute
+    }
+    '/_authenticated/agents/new': {
+      id: '/_authenticated/agents/new'
+      path: '/new'
+      fullPath: '/agents/new'
+      preLoaderRoute: typeof AuthenticatedAgentsNewRouteImport
+      parentRoute: typeof AuthenticatedAgentsRoute
+    }
+    '/_authenticated/campaigns/': {
+      id: '/_authenticated/campaigns/'
+      path: '/'
+      fullPath: '/campaigns/'
+      preLoaderRoute: typeof AuthenticatedCampaignsIndexRouteImport
+      parentRoute: typeof AuthenticatedCampaignsRoute
+    }
+    '/_authenticated/campaigns/$campaignId': {
+      id: '/_authenticated/campaigns/$campaignId'
+      path: '/$campaignId'
+      fullPath: '/campaigns/$campaignId'
+      preLoaderRoute: typeof AuthenticatedCampaignsCampaignIdRouteImport
+      parentRoute: typeof AuthenticatedCampaignsRoute
+    }
+    '/_authenticated/campaigns/new': {
+      id: '/_authenticated/campaigns/new'
+      path: '/new'
+      fullPath: '/campaigns/new'
+      preLoaderRoute: typeof AuthenticatedCampaignsNewRouteImport
+      parentRoute: typeof AuthenticatedCampaignsRoute
+    }
+    '/_authenticated/organizations/': {
+      id: '/_authenticated/organizations/'
+      path: '/'
+      fullPath: '/organizations/'
+      preLoaderRoute: typeof AuthenticatedOrganizationsIndexRouteImport
+      parentRoute: typeof AuthenticatedOrganizationsRoute
+    }
+    '/_authenticated/organizations/$orgId': {
+      id: '/_authenticated/organizations/$orgId'
+      path: '/$orgId'
+      fullPath: '/organizations/$orgId'
+      preLoaderRoute: typeof AuthenticatedOrganizationsOrgIdRouteImport
+      parentRoute: typeof AuthenticatedOrganizationsRoute
+    }
+    '/api/public/mailbox-return': {
+      id: '/api/public/mailbox-return'
+      path: '/api/public/mailbox-return'
+      fullPath: '/api/public/mailbox-return'
+      preLoaderRoute: typeof ApiPublicMailboxReturnRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/sequence-tick': {
+      id: '/api/public/sequence-tick'
+      path: '/api/public/sequence-tick'
+      fullPath: '/api/public/sequence-tick'
+      preLoaderRoute: typeof ApiPublicSequenceTickRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/vapi-webhook': {
+      id: '/api/public/vapi-webhook'
+      path: '/api/public/vapi-webhook'
+      fullPath: '/api/public/vapi-webhook'
+      preLoaderRoute: typeof ApiPublicVapiWebhookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/v1/leads': {
+      id: '/api/public/v1/leads'
+      path: '/api/public/v1/leads'
+      fullPath: '/api/public/v1/leads'
+      preLoaderRoute: typeof ApiPublicV1LeadsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
+interface AuthenticatedAgentsRouteChildren {
+  AuthenticatedAgentsAgentIdRoute: typeof AuthenticatedAgentsAgentIdRoute
+  AuthenticatedAgentsNewRoute: typeof AuthenticatedAgentsNewRoute
+  AuthenticatedAgentsIndexRoute: typeof AuthenticatedAgentsIndexRoute
+}
+
+const AuthenticatedAgentsRouteChildren: AuthenticatedAgentsRouteChildren = {
+  AuthenticatedAgentsAgentIdRoute: AuthenticatedAgentsAgentIdRoute,
+  AuthenticatedAgentsNewRoute: AuthenticatedAgentsNewRoute,
+  AuthenticatedAgentsIndexRoute: AuthenticatedAgentsIndexRoute,
+}
+
+const AuthenticatedAgentsRouteWithChildren =
+  AuthenticatedAgentsRoute._addFileChildren(AuthenticatedAgentsRouteChildren)
+
+interface AuthenticatedCampaignsRouteChildren {
+  AuthenticatedCampaignsCampaignIdRoute: typeof AuthenticatedCampaignsCampaignIdRoute
+  AuthenticatedCampaignsNewRoute: typeof AuthenticatedCampaignsNewRoute
+  AuthenticatedCampaignsIndexRoute: typeof AuthenticatedCampaignsIndexRoute
+}
+
+const AuthenticatedCampaignsRouteChildren: AuthenticatedCampaignsRouteChildren =
+  {
+    AuthenticatedCampaignsCampaignIdRoute:
+      AuthenticatedCampaignsCampaignIdRoute,
+    AuthenticatedCampaignsNewRoute: AuthenticatedCampaignsNewRoute,
+    AuthenticatedCampaignsIndexRoute: AuthenticatedCampaignsIndexRoute,
+  }
+
+const AuthenticatedCampaignsRouteWithChildren =
+  AuthenticatedCampaignsRoute._addFileChildren(
+    AuthenticatedCampaignsRouteChildren,
+  )
+
+interface AuthenticatedOrganizationsRouteChildren {
+  AuthenticatedOrganizationsOrgIdRoute: typeof AuthenticatedOrganizationsOrgIdRoute
+  AuthenticatedOrganizationsIndexRoute: typeof AuthenticatedOrganizationsIndexRoute
+}
+
+const AuthenticatedOrganizationsRouteChildren: AuthenticatedOrganizationsRouteChildren =
+  {
+    AuthenticatedOrganizationsOrgIdRoute: AuthenticatedOrganizationsOrgIdRoute,
+    AuthenticatedOrganizationsIndexRoute: AuthenticatedOrganizationsIndexRoute,
+  }
+
+const AuthenticatedOrganizationsRouteWithChildren =
+  AuthenticatedOrganizationsRoute._addFileChildren(
+    AuthenticatedOrganizationsRouteChildren,
+  )
+
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAgentsRoute: typeof AuthenticatedAgentsRouteWithChildren
+  AuthenticatedAnalyticsRoute: typeof AuthenticatedAnalyticsRoute
+  AuthenticatedCampaignsRoute: typeof AuthenticatedCampaignsRouteWithChildren
+  AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedInboxRoute: typeof AuthenticatedInboxRoute
+  AuthenticatedIntegrationsRoute: typeof AuthenticatedIntegrationsRoute
+  AuthenticatedLeadsRoute: typeof AuthenticatedLeadsRoute
+  AuthenticatedOrganizationsRoute: typeof AuthenticatedOrganizationsRouteWithChildren
+  AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAgentsRoute: AuthenticatedAgentsRouteWithChildren,
+  AuthenticatedAnalyticsRoute: AuthenticatedAnalyticsRoute,
+  AuthenticatedCampaignsRoute: AuthenticatedCampaignsRouteWithChildren,
+  AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedInboxRoute: AuthenticatedInboxRoute,
+  AuthenticatedIntegrationsRoute: AuthenticatedIntegrationsRoute,
+  AuthenticatedLeadsRoute: AuthenticatedLeadsRoute,
+  AuthenticatedOrganizationsRoute: AuthenticatedOrganizationsRouteWithChildren,
+  AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AuthRoute: AuthRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
+  ApiPublicMailboxReturnRoute: ApiPublicMailboxReturnRoute,
+  ApiPublicSequenceTickRoute: ApiPublicSequenceTickRoute,
+  ApiPublicVapiWebhookRoute: ApiPublicVapiWebhookRoute,
+  ApiPublicV1LeadsRoute: ApiPublicV1LeadsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
