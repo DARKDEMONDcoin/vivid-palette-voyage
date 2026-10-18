@@ -2,6 +2,7 @@
 
 - [x] Post-import audit — all signed-in pages, details, settings tabs, org create/delete pass; server database key fixed
 - [x] Mailbox encryption key regenerated — user re-links mailboxes
+- [ ] Full interactive E2E audit — agents, leads, campaign 8 steps, inbox, integrations, settings, button sweep
 
 - [x] Phase 1 — Auth, workspaces, roles, layout, design
 - [x] Phase 2 — Organizations, documents, RAG, brand summary
