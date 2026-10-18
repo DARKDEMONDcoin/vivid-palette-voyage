@@ -28,6 +28,8 @@ export const startMailboxConnect = createServerFn({ method: "POST" }).middleware
   const { supabaseAdmin: admin } = await import("@/integrations/external/client.server");
   const { gatewayRequest, checkedJson, decryptKey, scopesFor } = await import("./mailbox-gateway.server");
   const connector = connectorFor(data.provider);
+  // A key saved under a previous encryption secret can't be read; start a fresh consent instead of failing.
+  const safeDecrypt = (c: string) => { try { return decryptKey(c, cryptoSecret); } catch { return null; } };
   const { data: old, error: oldError } = await admin.from("app_user_connections").select("connection_key_ciphertext").eq("workspace_id", data.workspaceId).eq("user_id", context.userId).eq("connector_id", connector).maybeSingle();
   if (oldError) throw oldError;
   const { data: attempt, error } = await admin.from("mailbox_oauth_attempts").insert({ workspace_id: data.workspaceId, agent_id: data.agentId, user_id: context.userId, connector_id: connector }).select("id").single();
@@ -36,7 +38,7 @@ export const startMailboxConnect = createServerFn({ method: "POST" }).middleware
   const host = url.hostname === "localhost" ? request.headers.get("x-forwarded-host") : null;
   const returnUrl = new URL("/api/public/mailbox-return", host ? `https://${host}` : url.origin);
   returnUrl.searchParams.set("attempt", attempt.id);
-  const result = await checkedJson(await gatewayRequest("/api/v1/app-users/oauth2/authorize", apiKey, old ? decryptKey(old.connection_key_ciphertext, cryptoSecret) : null, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ connector_id: connector, app_user_id: context.userId, return_url: returnUrl.toString(), credentials_configuration: { scopes: scopesFor(connector), ...(data.provider === "outlook" ? { domain_hint: "none", prompt: "select_account" } : {}) } }) }, undefined, clientKey));
+  const result = await checkedJson(await gatewayRequest("/api/v1/app-users/oauth2/authorize", apiKey, old ? safeDecrypt(old.connection_key_ciphertext) : null, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ connector_id: connector, app_user_id: context.userId, return_url: returnUrl.toString(), credentials_configuration: { scopes: scopesFor(connector), ...(data.provider === "outlook" ? { domain_hint: "none", prompt: "select_account" } : {}) } }) }, undefined, clientKey));
   if (typeof result['authorization_url'] !== "string") throw new Error("Provider did not return an authorization address");
   return { authorizationUrl: result['authorization_url'] as string, attemptId: attempt.id, connectorId: connector };
 });
