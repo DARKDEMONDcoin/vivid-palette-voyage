@@ -153,13 +153,13 @@ export function AuditLog() {
   return (
     <Card title="Audit log" desc="Who did what and when. Visible to Super Admins only.">
       <Select value={entity} onValueChange={setEntity}><SelectTrigger className="w-56"><SelectValue /></SelectTrigger>
-        <SelectContent><SelectItem value="all">All activity</SelectItem>{ents.map((e) => <SelectItem key={e} value={e}>{e.replace("_", " ")}</SelectItem>)}</SelectContent></Select>
+        <SelectContent><SelectItem value="all">All activity</SelectItem>{ents.map((e) => <SelectItem key={e} value={e}>{e.replaceAll("_", " ")}</SelectItem>)}</SelectContent></Select>
       {q.isLoading ? <Skeleton className="mt-3 h-32" /> : !q.data?.length ? <p className="mt-3 text-sm text-muted-foreground">No activity recorded yet.</p> : (
         <Table className="mt-3"><TableHeader><TableRow><TableHead>When</TableHead><TableHead>Who</TableHead><TableHead>Action</TableHead><TableHead>Details</TableHead></TableRow></TableHeader>
           <TableBody>{q.data.map((r) => {
             const d = r.details as Record<string, unknown>;
             return (<TableRow key={r.id}><TableCell className="whitespace-nowrap text-muted-foreground">{new Date(r.created_at).toLocaleString()}</TableCell><TableCell>{r.who}</TableCell>
-              <TableCell><span className="font-medium">{r.entity.replace("_", " ")}</span> · {r.action}</TableCell>
+              <TableCell><span className="font-medium">{r.entity.replaceAll("_", " ")}</span> · {r.action}</TableCell>
               <TableCell className="text-sm text-muted-foreground">{Object.entries(d).map(([k, v]) => `${k}: ${String(v)}`).join(" · ")}</TableCell></TableRow>);
           })}</TableBody></Table>)}
     </Card>

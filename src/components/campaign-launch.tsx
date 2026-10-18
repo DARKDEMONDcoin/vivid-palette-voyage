@@ -238,7 +238,7 @@ export function LaunchStep({ campaign }: { campaign: Campaign }) {
                 <Textarea rows={4} placeholder="Paste the reply…" value={text} onChange={(e) => setText(e.target.value)} />
                 <Button size="sm" disabled={busy || !text.trim()} onClick={() => act(async () => {
                   const r = await reply({ data: { campaignLeadId: l.id, body: text, channel: ch } }); setOpen(null);
-                  return `Classified as ${r.classification.replace("_", " ")}${r.isSql ? r.crmError ? ` — SQL, but CRM push failed: ${r.crmError}` : " — SQL sent to Freshsales" : ""}`;
+                  return `Classified as ${r.classification.replaceAll("_", " ")}${r.isSql ? r.crmError ? ` — SQL, but CRM push failed: ${r.crmError}` : " — SQL sent to Freshsales" : ""}`;
                 }, "")}>{busy && <Loader2 className="size-4 animate-spin" />}Classify reply</Button>
               </div>}
             </div>))}
@@ -248,7 +248,7 @@ export function LaunchStep({ campaign }: { campaign: Campaign }) {
         <h3 className="mb-3 font-display font-semibold">Replies</h3>
         {replies.data.map((r) => (
           <div key={r.id} className="border-b py-2 text-sm last:border-0">
-            <div className="flex items-center gap-2"><ChannelChip ch={r.channel} /><b>{r.classification?.replace("_", " ")}</b>{r.is_sql && <span className="rounded-full bg-warning/20 px-2 text-xs">SQL</span>}
+            <div className="flex items-center gap-2"><ChannelChip ch={r.channel} /><b>{r.classification?.replaceAll("_", " ")}</b>{r.is_sql && <span className="rounded-full bg-warning/20 px-2 text-xs">SQL</span>}
               <span className="ml-auto text-xs text-muted-foreground">{new Date(r.created_at).toLocaleString()}</span></div>
             <p className="text-muted-foreground">{r.summary}</p>
             {r.is_sql && <p className="text-xs">{r.freshsales_id ? `Freshsales contact #${r.freshsales_id}` : `Not in Freshsales: ${r.crm_error}`}</p>}

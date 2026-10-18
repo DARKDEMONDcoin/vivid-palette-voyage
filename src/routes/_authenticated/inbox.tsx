@@ -65,7 +65,7 @@ function InboxPage() {
       <div className="mb-4 flex flex-wrap items-center gap-2">
         {(["open", "sql", "all"] as const).map((v) => (
           <button key={v} onClick={() => setView(v)} className={`rounded-full px-3 py-1 text-sm ${view === v ? "bg-primary text-primary-foreground" : "bg-card shadow-soft"}`}>{v === "open" ? "To handle" : v === "sql" ? "SQLs" : "All"}</button>))}
-        <select className={`${sel} ml-auto`} value={cls} onChange={(e) => setCls(e.target.value)}><option value="">Any type</option>{CLASSES.map((c) => <option key={c} value={c}>{c.replace("_", " ")}</option>)}</select>
+        <select className={`${sel} ml-auto`} value={cls} onChange={(e) => setCls(e.target.value)}><option value="">Any type</option>{CLASSES.map((c) => <option key={c} value={c}>{c.replaceAll("_", " ")}</option>)}</select>
       </div>
       {q.isLoading ? <Skeleton className="h-64 rounded-2xl" /> : !rows.length ? (
         <div className="rounded-2xl bg-card p-10 text-center text-sm text-muted-foreground shadow-soft">No replies here.</div>
@@ -76,7 +76,7 @@ function InboxPage() {
               <button key={r.id} onClick={() => setSel(r.id)} className={`w-full rounded-2xl p-4 text-left shadow-soft transition ${active?.id === r.id ? "bg-lavender" : "bg-card hover:bg-muted/50"}`}>
                 <div className="flex items-center gap-2 text-sm"><b className="truncate">{nm(r.cl?.lead)}</b>{r.is_sql && <span className="rounded-full bg-warning/20 px-2 text-xs">SQL</span>}
                   <span className="ml-auto shrink-0 text-xs text-muted-foreground">{new Date(r.created_at).toLocaleDateString()}</span></div>
-                <div className="mt-1 flex items-center gap-2 text-xs"><ChannelChip ch={r.channel} /><span>{r.classification?.replace("_", " ")}</span>{r.handled && <Check className="size-3 text-success" />}</div>
+                <div className="mt-1 flex items-center gap-2 text-xs"><ChannelChip ch={r.channel} /><span>{r.classification?.replaceAll("_", " ")}</span>{r.handled && <Check className="size-3 text-success" />}</div>
                 <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">{r.summary}</p>
               </button>))}
           </div>
@@ -88,7 +88,7 @@ function InboxPage() {
                 {!ro && <Button variant="outline" size="sm" className="ml-auto" onClick={() => markHandled(active.id, !active.handled)}>{active.handled ? "Reopen" : <><Check className="size-4" /> Mark handled</>}</Button>}
               </div>
               <div className="rounded-xl bg-muted/50 p-4">
-                <div className="mb-1 text-xs text-muted-foreground">{active.classification?.replace("_", " ")} · {active.summary}</div>
+                <div className="mb-1 text-xs text-muted-foreground">{active.classification?.replaceAll("_", " ")} · {active.summary}</div>
                 <p className="whitespace-pre-wrap text-sm">{active.body}</p>
                 {active.is_sql && <p className="mt-2 text-xs">{active.freshsales_id ? `In Freshsales as contact #${active.freshsales_id}` : `Not in Freshsales: ${active.crm_error}`}</p>}
               </div>
@@ -123,7 +123,7 @@ function LogReplyDialog({ open, onClose }: { open: boolean; onClose: () => void 
     setBusy(true);
     try {
       const r = await reply({ data: { campaignLeadId: pick!, body: text, channel: ch } });
-      toast.success(`Classified as ${r.classification.replace("_", " ")}${r.isSql ? (r.crmError ? ` — SQL, CRM push failed: ${r.crmError}` : " — SQL sent to Freshsales") : ""}`);
+      toast.success(`Classified as ${r.classification.replaceAll("_", " ")}${r.isSql ? (r.crmError ? ` — SQL, CRM push failed: ${r.crmError}` : " — SQL sent to Freshsales") : ""}`);
       setText(""); setPick(null); onClose();
     } catch (e) { toast.error(e instanceof Error ? e.message : "Failed"); }
     setBusy(false);

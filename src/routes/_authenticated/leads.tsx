@@ -124,7 +124,7 @@ function LeadsPage() {
                   <td className="p-3"><div className="font-medium">{name(r)} {suppressed(r.email) && <span className="ml-1 rounded-full bg-destructive/10 px-2 text-xs text-destructive">Do not contact</span>}</div><div className="text-xs text-muted-foreground">{r.title} {r.email && `· ${r.email}`}</div></td>
                   <td className="p-3">{r.company ?? "—"}</td><td className="p-3">{r.country ?? "—"}</td>
                   <td className="p-3"><div className="flex flex-wrap gap-1">{r.cl.map((c) => (
-                    <span key={c.id} className={`rounded-full px-2 py-0.5 text-xs ${c.status === "sql" ? "bg-warning/20" : "bg-muted"}`}>{cname.get(c.campaign_id) ?? "Campaign"}: {c.status === "sql" ? "SQL" : c.status === "new" ? c.decision.replace("_", " ") : c.status}</span>))}</div></td>
+                    <span key={c.id} className={`rounded-full px-2 py-0.5 text-xs ${c.status === "sql" ? "bg-warning/20" : "bg-muted"}`}>{cname.get(c.campaign_id) ?? "Campaign"}: {c.status === "sql" ? "SQL" : c.status === "new" ? c.decision.replaceAll("_", " ") : c.status}</span>))}</div></td>
                   <td className="p-3 capitalize">{r.source}</td>
                 </tr>))}
             </tbody>

@@ -22,7 +22,7 @@ export function LeadTimeline({ leadId }: { leadId: string }) {
       const items: Item[] = [
         ...(m.data ?? []).filter((x) => x.status !== "draft" && x.status !== "rejected").map((x) => ({ at: x.sent_at ?? x.scheduled_for ?? x.created_at, kind: "message" as const, channel: x.channel,
           title: `Step ${x.step_order}${x.subject ? ` — ${x.subject}` : ""}`, body: x.body, meta: x.status + (x.error ? ` · ${x.error}` : ""), campaign: name.get(x.campaign_lead_id) ?? "" })),
-        ...(r.data ?? []).map((x) => ({ at: x.created_at, kind: "reply" as const, channel: x.channel, title: `Reply · ${x.classification?.replace("_", " ") ?? "unclassified"}${x.is_sql ? " · SQL" : ""}`,
+        ...(r.data ?? []).map((x) => ({ at: x.created_at, kind: "reply" as const, channel: x.channel, title: `Reply · ${x.classification?.replaceAll("_", " ") ?? "unclassified"}${x.is_sql ? " · SQL" : ""}`,
           body: x.body, meta: x.summary ?? "", campaign: name.get(x.campaign_lead_id) ?? "" })),
       ].sort((a, b) => a.at.localeCompare(b.at));
       return { cls: cls ?? [], items };
@@ -35,7 +35,7 @@ export function LeadTimeline({ leadId }: { leadId: string }) {
       <div className="flex flex-wrap gap-2">
         {d.cls.map((c) => (
           <span key={c.id} className="rounded-full bg-muted px-3 py-1 text-xs">
-            {(c.campaign as unknown as { name: string } | null)?.name}: {c.status === "sql" ? "SQL" : c.status} · {c.decision.replace("_", " ")}{c.score ? ` · score ${c.score}` : ""}
+            {(c.campaign as unknown as { name: string } | null)?.name}: {c.status === "sql" ? "SQL" : c.status} · {c.decision.replaceAll("_", " ")}{c.score ? ` · score ${c.score}` : ""}
           </span>))}
         {!d.cls.length && <p className="text-sm text-muted-foreground">Not in any campaign you can see.</p>}
       </div>
