@@ -17,7 +17,7 @@ function validate(d: unknown): Input {
 
 async function runTest(provider: Provider, secret: string, config: Record<string, string>): Promise<string | null> {
   try {
-    let res: Response;
+    let res!: Response;
     if (provider === "apollo") {
       res = await fetch("https://api.apollo.io/v1/auth/health", { headers: { "X-Api-Key": secret, "Cache-Control": "no-cache" } });
       if (res.ok) {
@@ -38,8 +38,12 @@ async function runTest(provider: Provider, secret: string, config: Record<string
       else if (p === "gemini") res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${encodeURIComponent(secret)}`);
       else return "Unknown AI provider";
     } else if (provider === "phantombuster") {
-      if (!config["phantom_id"]) return "Enter the LinkedIn automation phantom ID";
-      res = await fetch(`https://api.phantombuster.com/api/v2/agents/fetch?id=${encodeURIComponent(config["phantom_id"])}`, { headers: { "X-Phantombuster-Key": secret } });
+      const ids = [...new Set(["phantom_connect", "phantom_visit", "phantom_message", "phantom_like", "phantom_comment", "phantom_share", "phantom_id"].map((k) => (config[k] ?? "").trim()).filter(Boolean))];
+      if (!ids.length) return "Enter at least one LinkedIn phantom ID";
+      for (const id of ids) {
+        res = await fetch(`https://api.phantombuster.com/api/v2/agents/fetch?id=${encodeURIComponent(id)}`, { headers: { "X-Phantombuster-Key": secret } });
+        if (!res.ok) break;
+      }
     } else if (provider === "vapi") {
       if (!config["assistant_en"] && !config["assistant_ar"]) return "Enter at least one assistant ID (English or Arabic)";
       res = await fetch("https://api.vapi.ai/assistant?limit=1", { headers: { Authorization: `Bearer ${secret}` } });

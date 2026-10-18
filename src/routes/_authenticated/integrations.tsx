@@ -47,8 +47,16 @@ const defs: { id: Provider; name: string; desc: string; icon: typeof Database; s
       { key: "map_lead_source", label: "Field mapping — lead source value", placeholder: "Outreach AI" },
       { key: "map_lifecycle_stage", label: "Field mapping — lifecycle stage for SQLs", placeholder: "Sales Qualified Lead" },
       { key: "map_custom_fields", label: "Field mapping — custom fields (ours=theirs, comma separated)", placeholder: "agent=cf_agent,brand=cf_brand" }] },
-  { id: "phantombuster", name: "Phantombuster (LinkedIn)", desc: "Runs LinkedIn connection requests and messages.", icon: Linkedin, secretLabel: "API key",
-    fields: [{ key: "phantom_id", label: "LinkedIn automation phantom ID", placeholder: "e.g. 1234567890123456" }] },
+  { id: "phantombuster", name: "Phantombuster (LinkedIn)", desc: "Automates LinkedIn: connection requests, profile visits, messages, likes, comments and shares.", icon: Linkedin, secretLabel: "API key",
+    fields: [
+      { key: "phantom_connect", label: "Phantom ID — connection requests (LinkedIn Auto Connect)", placeholder: "e.g. 1234567890123456" },
+      { key: "phantom_visit", label: "Phantom ID — profile visits (LinkedIn Profile Visitor)", placeholder: "optional" },
+      { key: "phantom_message", label: "Phantom ID — direct messages (LinkedIn Message Sender)", placeholder: "optional" },
+      { key: "phantom_like", label: "Phantom ID — like posts (LinkedIn Auto Liker)", placeholder: "optional" },
+      { key: "phantom_comment", label: "Phantom ID — comment on posts (LinkedIn Auto Commenter)", placeholder: "optional" },
+      { key: "phantom_share", label: "Phantom ID — share content (LinkedIn Auto Poster)", placeholder: "optional" },
+      { key: "phantom_id", label: "Fallback phantom ID (used when an action has none)", placeholder: "optional" },
+    ] },
   { id: "vapi", name: "Vapi (Calls)", desc: "AI voice calls in English and Arabic.", icon: Phone, secretLabel: "API key",
     fields: [
       { key: "assistant_en", label: "English assistant ID", placeholder: "" },

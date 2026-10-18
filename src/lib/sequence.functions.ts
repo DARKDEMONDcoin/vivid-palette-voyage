@@ -1,7 +1,8 @@
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/external/auth-middleware";
+import { isLinkedInAction, LINKEDIN_ACTION_META, type LinkedInAction } from "./linkedin";
 
-export type StepInput = { channel: "email" | "linkedin" | "call"; delay_days: number; instructions: string };
+export type StepInput = { channel: "email" | "linkedin" | "call"; delay_days: number; instructions: string; linkedin_action?: LinkedInAction | null };
 type Rpc = (fn: string, args: object) => Promise<{ data: unknown; error: unknown }>;
 
 async function assertEdit(supabase: unknown, campaignId: string) {
@@ -19,7 +20,8 @@ export const saveSteps = createServerFn({ method: "POST" })
     if (!d?.campaignId || !Array.isArray(d.steps) || !d.steps.length || d.steps.length > 8) throw new Error("Add 1–8 steps");
     return { campaignId: d.campaignId, steps: d.steps.map((s) => ({
       channel: (["email", "linkedin", "call"].includes(s.channel) ? s.channel : "email") as StepInput["channel"],
-      delay_days: Math.min(60, Math.max(0, Math.round(Number(s.delay_days) || 0))), instructions: String(s.instructions ?? "").slice(0, 1000) })) };
+      delay_days: Math.min(60, Math.max(0, Math.round(Number(s.delay_days) || 0))), instructions: String(s.instructions ?? "").slice(0, 1000),
+      linkedin_action: s.channel === "linkedin" ? (isLinkedInAction(s.linkedin_action) ? s.linkedin_action : "message") : null })) };
   })
   .handler(async ({ data, context }) => {
     const { admin, campaign } = await assertEdit(context.supabase, data.campaignId);
@@ -64,13 +66,13 @@ export const generateCopy = createServerFn({ method: "POST" })
         const input = `Brand: ${org?.name}\n${org?.description ?? ""}\nApproved brand summary: ${org?.summary_status === "approved" ? JSON.stringify(org.summary) : "not approved"}\n\nSender: ${agent?.name}. Tone: ${agent?.tone}. Signature:\n${agent?.signature || org?.signature || agent?.name}\n\n` +
           `Lead: ${JSON.stringify({ first_name: l["first_name"], last_name: l["last_name"], title: l["title"], company: l["company"], industry: l["industry"], country: l["country"] })}\nResearch: ${r.research ? JSON.stringify(r.research) : "none"}\n\n` +
           `Write in ${lang}. ${variant === "B" ? "This is variant B: use a noticeably different angle and subject line than a standard opener (e.g. lead with a question or insight)." : ""}\nSteps:\n` +
-          steps.map((s) => `step ${s.step_order}: ${s.channel}${s.delay_days ? ` (${s.delay_days} days later)` : ""}${s.instructions ? ` — ${s.instructions}` : ""}`).join("\n");
+          steps.map((s) => `step ${s.step_order}: ${s.channel}${s.channel === "linkedin" ? ` (${LINKEDIN_ACTION_META[(isLinkedInAction(s.linkedin_action) ? s.linkedin_action : "message")].label})` : ""}${s.delay_days ? ` (${s.delay_days} days later)` : ""}${s.instructions ? ` — ${s.instructions}` : ""}`).join("\n");
         const out = await llmJson<{ messages: { step: number; subject: string; body: string }[] }>(cfg,
-          "You are an SDR writing a multi-step B2B outreach sequence. For each step return one message. email: subject (short, no clickbait) and body (under 120 words, plain text, include the signature). linkedin: subject empty, body under 280 characters, no signature. call: subject empty, body = 3-5 bullet talking points for a voice assistant. Use only facts from the brand info and research; never invent numbers, clients or news. Later steps reference earlier ones briefly.",
+          "You are an SDR writing a multi-step B2B outreach sequence. For each step return one message. email: subject (short, no clickbait) and body (under 120 words, plain text, include the signature). linkedin: subject empty, no signature; for a connection request a note under 280 characters; for a direct message under 280 characters; for a comment on their latest post 1-2 genuine sentences; for share content a short post under 600 characters; for a profile visit or like write one short line describing the action. call: subject empty, body = 3-5 bullet talking points for a voice assistant. Use only facts from the brand info and research; never invent numbers, clients or news. Later steps reference earlier ones briefly.",
           input, "sequence_copy", copySchema);
         const rowsOut = steps.map((s) => {
           const m = out.messages.find((x) => x.step === s.step_order) ?? out.messages[s.step_order - 1];
-          return { campaign_id: campaign.id, campaign_lead_id: r.id, workspace_id: campaign.workspace_id, step_id: s.id, step_order: s.step_order, channel: s.channel, variant,
+          return { campaign_id: campaign.id, campaign_lead_id: r.id, workspace_id: campaign.workspace_id, step_id: s.id, step_order: s.step_order, channel: s.channel, linkedin_action: s.channel === "linkedin" ? (s.linkedin_action ?? "message") : null, variant,
             subject: s.channel === "email" ? (m?.subject ?? "").slice(0, 200) : null, body: (m?.body ?? "").slice(0, 4000), status: "draft", approved_by: null, approved_at: null, error: null };
         });
         if (rowsOut.some((x) => !x.body)) throw new Error("AI skipped a step");

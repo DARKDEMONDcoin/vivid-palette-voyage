@@ -12,6 +12,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sh
 import { supabase } from "@/integrations/external/client";
 import { useWorkspace } from "@/lib/workspace";
 import { LeadTimeline } from "@/components/lead-timeline";
+import { LeadLinkedInActions } from "@/components/lead-linkedin-actions";
 
 export const Route = createFileRoute("/_authenticated/leads")({
   head: () => ({ meta: [{ title: "Leads — Outreach AI" }, { name: "description", content: "Search, filter and manage every lead in your workspace." }] }),
@@ -142,7 +143,7 @@ function LeadsPage() {
       <Sheet open={!!open} onOpenChange={(o) => !o && setOpen(null)}>
         <SheetContent className="w-full overflow-y-auto sm:max-w-xl">
           <SheetHeader><SheetTitle>{open?.name}</SheetTitle></SheetHeader>
-          <div className="mt-4">{open && <LeadTimeline leadId={open.id} />}</div>
+          <div className="mt-4 space-y-4">{open && <><LeadLinkedInActions leadId={open.id} canAct={current?.role !== "viewer"} /><LeadTimeline leadId={open.id} /></>}</div>
         </SheetContent>
       </Sheet>
     </div>
