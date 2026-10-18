@@ -21,3 +21,6 @@
 - [x] Phase 8 — Analytics and Dashboard (cost per SQL not tracked)
 - [x] Phase 9 — Settings modules (unsubscribe links, bounces, token/cost metering, email notifications wait on mailbox sending)
 - [ ] Later — brand logo upload, OCR for scanned PDFs, dark theme, 2FA, demo workspace
+
+- [ ] Relink Gmail + Outlook mailbox clients after workspace move
+- [ ] LinkedIn automation via Phantombuster (campaign steps + lead buttons)
