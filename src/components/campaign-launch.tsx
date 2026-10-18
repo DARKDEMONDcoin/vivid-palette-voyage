@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { LINKEDIN_ACTIONS, LINKEDIN_ACTION_META, isLinkedInAction, type LinkedInAction } from "@/lib/linkedin";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
@@ -51,8 +52,8 @@ export function SequenceStep({ campaign, onNext }: { campaign: Campaign; onNext:
   const [busy, setBusy] = useState(false);
   useEffect(() => {
     if (!q.data) return;
-    setSteps(q.data.length ? q.data.map((s) => ({ channel: s.channel as Ch, delay_days: s.delay_days, instructions: s.instructions ?? "" }))
-      : [{ channel: "email", delay_days: 0, instructions: "" }, { channel: "linkedin", delay_days: 2, instructions: "" }, { channel: "email", delay_days: 3, instructions: "Short follow-up" }, { channel: "call", delay_days: 4, instructions: "" }]);
+    setSteps(q.data.length ? q.data.map((s) => ({ channel: s.channel as Ch, delay_days: s.delay_days, instructions: s.instructions ?? "", linkedin_action: isLinkedInAction(s.linkedin_action) ? s.linkedin_action : null }))
+      : [{ channel: "email", delay_days: 0, instructions: "" }, { channel: "linkedin", delay_days: 2, instructions: "", linkedin_action: "connect" }, { channel: "email", delay_days: 3, instructions: "Short follow-up" }, { channel: "call", delay_days: 4, instructions: "" }]);
   }, [q.data]);
   const upd = (i: number, p: Partial<StepInput>) => setSteps((s) => s.map((x, j) => (j === i ? { ...x, ...p } : x)));
   async function submit() {
@@ -67,8 +68,11 @@ export function SequenceStep({ campaign, onNext }: { campaign: Campaign; onNext:
         <div key={i} className={`${card} flex flex-wrap items-end gap-3`}>
           <span className="font-display text-lg font-semibold text-muted-foreground">{i + 1}</span>
           <div className="space-y-1"><Label className="text-xs">Channel</Label>
-            <select disabled={ro} className={sel} value={s.channel} onChange={(e) => upd(i, { channel: e.target.value as Ch })}>
+            <select disabled={ro} className={sel} value={s.channel} onChange={(e) => upd(i, { channel: e.target.value as Ch, linkedin_action: e.target.value === "linkedin" ? "connect" : null })}>
               <option value="email">Email</option><option value="linkedin">LinkedIn</option><option value="call">Call</option></select></div>
+          {s.channel === "linkedin" && <div className="space-y-1"><Label className="text-xs">LinkedIn action</Label>
+            <select disabled={ro} className={sel} value={s.linkedin_action ?? "message"} onChange={(e) => upd(i, { linkedin_action: e.target.value as LinkedInAction })}>
+              {LINKEDIN_ACTIONS.map((a) => <option key={a} value={a}>{LINKEDIN_ACTION_META[a].label}</option>)}</select></div>}
           <div className="space-y-1"><Label className="text-xs">{i === 0 ? "Days after launch" : "Days after previous step"}</Label>
             <Input disabled={ro} type="number" min={0} max={60} className="w-28" value={s.delay_days} onChange={(e) => upd(i, { delay_days: Number(e.target.value) })} /></div>
           <div className="min-w-60 flex-1 space-y-1"><Label className="text-xs">Instructions for the AI (optional)</Label>
@@ -162,7 +166,7 @@ export function ApprovalStep({ campaign, onNext }: { campaign: Campaign; onNext:
           <div key={m.id} className={card}>
             <div className="mb-3 flex flex-wrap items-center gap-2 text-sm">
               <b>{name(m.cl.lead)}</b><span className="text-muted-foreground">· {m.cl.lead.company}</span>
-              <span className="text-muted-foreground">· Step {m.step_order}</span><ChannelChip ch={m.channel} />
+              <span className="text-muted-foreground">· Step {m.step_order}</span><ChannelChip ch={m.channel} />{m.channel === "linkedin" && isLinkedInAction(m.linkedin_action) && <span className="text-xs text-muted-foreground">{LINKEDIN_ACTION_META[m.linkedin_action].label}</span>}
               {campaign.ab_testing && <span className="rounded-full bg-lavender px-2 py-0.5 text-xs">Variant {m.variant}</span>}
               <span className="ml-auto text-xs text-muted-foreground">{m.status}</span>
             </div>
