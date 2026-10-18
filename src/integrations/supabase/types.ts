@@ -381,6 +381,7 @@ export type Database = {
           delay_days: number
           id: string
           instructions: string | null
+          linkedin_action: string | null
           step_order: number
           workspace_id: string
         }
@@ -391,6 +392,7 @@ export type Database = {
           delay_days?: number
           id?: string
           instructions?: string | null
+          linkedin_action?: string | null
           step_order: number
           workspace_id: string
         }
@@ -401,6 +403,7 @@ export type Database = {
           delay_days?: number
           id?: string
           instructions?: string | null
+          linkedin_action?: string | null
           step_order?: number
           workspace_id?: string
         }
@@ -764,6 +767,45 @@ export type Database = {
           },
         ]
       }
+      linkedin_actions: {
+        Row: {
+          action: string
+          content: string | null
+          created_at: string
+          created_by: string | null
+          error: string | null
+          id: string
+          lead_id: string
+          message_id: string | null
+          status: string
+          workspace_id: string
+        }
+        Insert: {
+          action: string
+          content?: string | null
+          created_at?: string
+          created_by?: string | null
+          error?: string | null
+          id?: string
+          lead_id: string
+          message_id?: string | null
+          status?: string
+          workspace_id: string
+        }
+        Update: {
+          action?: string
+          content?: string | null
+          created_at?: string
+          created_by?: string | null
+          error?: string | null
+          id?: string
+          lead_id?: string
+          message_id?: string | null
+          status?: string
+          workspace_id?: string
+        }
+        Relationships: []
+      }
       mailbox_oauth_attempts: {
         Row: {
           agent_id: string
@@ -817,6 +859,7 @@ export type Database = {
           created_at: string
           error: string | null
           id: string
+          linkedin_action: string | null
           scheduled_for: string | null
           sent_at: string | null
           status: string
@@ -836,6 +879,7 @@ export type Database = {
           created_at?: string
           error?: string | null
           id?: string
+          linkedin_action?: string | null
           scheduled_for?: string | null
           sent_at?: string | null
           status?: string
@@ -855,6 +899,7 @@ export type Database = {
           created_at?: string
           error?: string | null
           id?: string
+          linkedin_action?: string | null
           scheduled_for?: string | null
           sent_at?: string | null
           status?: string
