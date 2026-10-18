@@ -12,7 +12,14 @@ export async function sendAgentEmail(admin: Admin, input: { workspaceId: string;
   if (!member || member.role === "viewer") return { waiting: true, error: "Mailbox owner no longer has sending access" };
   const apiKey = process.env['LOVABLE_API_KEY'], secret = process.env['APP_USER_CONNECTION_KEY_SECRET'];
   if (!apiKey || !secret) return { waiting: true, error: "Mailbox provider is not configured" };
-  const key = decryptKey(connection.connection_key_ciphertext, secret);
+  let key: string;
+  try { key = decryptKey(connection.connection_key_ciphertext, secret); }
+  catch {
+    // Saved under a previous encryption secret: the owner must reconnect.
+    const { error: updateError } = await admin.from("app_user_connections").update({ reconnect_required: true }).eq("id", connection.id).eq("workspace_id", input.workspaceId);
+    if (updateError) throw updateError;
+    return { waiting: true, error: "Mailbox access needs to be renewed" };
+  }
   const gmail = connection.connector_id === "google_mail";
   const response = await gatewayRequest(gmail ? "/google_mail/gmail/v1/users/me/messages/send" : "/microsoft_outlook/me/sendMail", apiKey, key, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(gmail ? { raw: rawEmail(input.to, input.subject, input.body) } : { message: { subject: input.subject, body: { contentType: "Text", content: input.body }, toRecipients: [{ emailAddress: { address: input.to } }] }, saveToSentItems: true }) }, scopesFor(connection.connector_id));
   if (response.status === 401) {
