@@ -4,7 +4,10 @@ import type { Database } from "../supabase/types";
 import { EXTERNAL_URL, keyFetch } from "./config";
 
 function make() {
-  const key = process.env["EXTERNAL_SUPABASE_SERVICE_ROLE_KEY"];
+  // The linked project is the same database, so its bound service key works too.
+  const key =
+    process.env["EXTERNAL_SUPABASE_SERVICE_ROLE_KEY"] ||
+    (process.env["SUPABASE_URL"] === EXTERNAL_URL ? process.env["SUPABASE_SERVICE_ROLE_KEY"] : undefined);
   if (!key) throw new Error("Missing EXTERNAL_SUPABASE_SERVICE_ROLE_KEY");
   return createClient<Database>(EXTERNAL_URL, key, {
     global: { fetch: keyFetch(key) },
