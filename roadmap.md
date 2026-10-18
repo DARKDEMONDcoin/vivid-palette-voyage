@@ -1,6 +1,7 @@
 # Roadmap
 
-- [ ] Current audit — signed-in navigation, organization/document CRUD, agent settings, campaign workflow, leads, inbox, analytics, integrations and settings; fix reproduced defects and run regression tests
+- [x] Post-import audit — all signed-in pages, details, settings tabs, org create/delete pass; server database key fixed
+- [ ] Mailbox encryption key (APP_USER_CONNECTION_KEY_SECRET) missing after import — blocked: needs original value from user
 
 - [x] Phase 1 — Auth, workspaces, roles, layout, design
 - [x] Phase 2 — Organizations, documents, RAG, brand summary
