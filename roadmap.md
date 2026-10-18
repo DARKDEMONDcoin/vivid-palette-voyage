@@ -1,7 +1,7 @@
 # Roadmap
 
 - [x] Post-import audit — all signed-in pages, details, settings tabs, org create/delete pass; server database key fixed
-- [ ] Mailbox encryption key (APP_USER_CONNECTION_KEY_SECRET) missing after import — blocked: needs original value from user
+- [x] Mailbox encryption key regenerated — user re-links mailboxes
 
 - [x] Phase 1 — Auth, workspaces, roles, layout, design
 - [x] Phase 2 — Organizations, documents, RAG, brand summary
