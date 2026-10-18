@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { Ban, Download, Search } from "lucide-react";
 import { PageHeader } from "@/components/app-shell";
@@ -15,6 +15,7 @@ import { LeadTimeline } from "@/components/lead-timeline";
 
 export const Route = createFileRoute("/_authenticated/leads")({
   head: () => ({ meta: [{ title: "Leads — Outreach AI" }, { name: "description", content: "Search, filter and manage every lead in your workspace." }] }),
+  validateSearch: (s: Record<string, unknown>): { q?: string } => (typeof s["q"] === "string" && s["q"] ? { q: s["q"] } : {}),
   component: LeadsPage,
 });
 
@@ -25,7 +26,9 @@ function LeadsPage() {
   const { current, user } = useWorkspace();
   const qc = useQueryClient();
   const ws = current?.workspace_id;
-  const [search, setSearch] = useState("");
+  const { q: initialQ } = Route.useSearch();
+  const [search, setSearch] = useState(initialQ ?? "");
+  useEffect(() => { if (initialQ !== undefined) { setSearch(initialQ); setPage(0); } }, [initialQ]);
   const [campaign, setCampaign] = useState("");
   const [status, setStatus] = useState("");
   const [source, setSource] = useState("");
@@ -124,7 +127,7 @@ function LeadsPage() {
                   <td className="p-3"><div className="font-medium">{name(r)} {suppressed(r.email) && <span className="ml-1 rounded-full bg-destructive/10 px-2 text-xs text-destructive">Do not contact</span>}</div><div className="text-xs text-muted-foreground">{r.title} {r.email && `· ${r.email}`}</div></td>
                   <td className="p-3">{r.company ?? "—"}</td><td className="p-3">{r.country ?? "—"}</td>
                   <td className="p-3"><div className="flex flex-wrap gap-1">{r.cl.map((c) => (
-                    <span key={c.id} className={`rounded-full px-2 py-0.5 text-xs ${c.status === "sql" ? "bg-warning/20" : "bg-muted"}`}>{cname.get(c.campaign_id) ?? "Campaign"}: {c.status === "sql" ? "SQL" : c.status === "new" ? c.decision.replace("_", " ") : c.status}</span>))}</div></td>
+                    <span key={c.id} className={`rounded-full px-2 py-0.5 text-xs ${c.status === "sql" ? "bg-warning/20" : "bg-muted"}`}>{cname.get(c.campaign_id) ?? "Campaign"}: {c.status === "sql" ? "SQL" : c.status === "new" ? c.decision.replaceAll("_", " ") : c.status}</span>))}</div></td>
                   <td className="p-3 capitalize">{r.source}</td>
                 </tr>))}
             </tbody>

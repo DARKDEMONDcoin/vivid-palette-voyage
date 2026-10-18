@@ -13,8 +13,8 @@ import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { GlobalSearch } from "@/components/global-search";
 import { supabase } from "@/integrations/external/client";
 import { roleLabel, useWorkspace } from "@/lib/workspace";
 import { NotificationBell } from "@/components/notification-bell";
@@ -103,13 +103,24 @@ export function AppShell({ children }: { children: ReactNode }) {
               ))}
             </DropdownMenuContent>
           </DropdownMenu>
-          <div className="relative ml-2 hidden max-w-md flex-1 md:block">
-            <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-            <Input placeholder="Search leads, campaigns, agents…" className="rounded-full bg-secondary pl-9" />
-          </div>
+          <GlobalSearch />
           <div className="ml-auto flex items-center gap-1">
             <NotificationBell />
-            <Button variant="ghost" size="icon" aria-label="Help"><HelpCircle className="size-5" /></Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon" aria-label="Help"><HelpCircle className="size-5" /></Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-64">
+                <DropdownMenuLabel>Getting started</DropdownMenuLabel>
+                <DropdownMenuItem asChild><Link to="/organizations">1. Add an organization and its documents</Link></DropdownMenuItem>
+                <DropdownMenuItem asChild><Link to="/agents/new">2. Create an agent</Link></DropdownMenuItem>
+                <DropdownMenuItem asChild><Link to="/agents">3. Connect the agent's mailbox</Link></DropdownMenuItem>
+                <DropdownMenuItem asChild><Link to="/campaigns/new">4. Build and launch a campaign</Link></DropdownMenuItem>
+                <DropdownMenuItem asChild><Link to="/inbox">5. Handle replies in the inbox</Link></DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild><Link to="/integrations">Integrations</Link></DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button aria-label="Account menu" className="rounded-full">
