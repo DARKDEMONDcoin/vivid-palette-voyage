@@ -17,7 +17,7 @@ function validate(d: unknown): Input {
 
 async function runTest(provider: Provider, secret: string, config: Record<string, string>): Promise<string | null> {
   try {
-    let res: Response;
+    let res!: Response;
     if (provider === "apollo") {
       res = await fetch("https://api.apollo.io/v1/auth/health", { headers: { "X-Api-Key": secret, "Cache-Control": "no-cache" } });
       if (res.ok) {
