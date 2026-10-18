@@ -35,7 +35,7 @@ export function GlobalSearch() {
         supabase.from("agents").select("id,name").eq("workspace_id", ws!).ilike("name", like).limit(5),
       ]);
       return [
-        ...(l.data ?? []).map((x) => ({ kind: "lead" as const, id: x.id, label: [x.first_name, x.last_name].filter(Boolean).join(" ") || x.email, sub: [x.company, x.email].filter(Boolean).join(" · ") })),
+        ...(l.data ?? []).map((x) => ({ kind: "lead" as const, id: x.id, label: [x.first_name, x.last_name].filter(Boolean).join(" ") || x.email || "Lead", sub: [x.company, x.email].filter(Boolean).join(" · ") })),
         ...(c.data ?? []).map((x) => ({ kind: "campaign" as const, id: x.id, label: x.name, sub: `Campaign · ${x.status}` })),
         ...(a.data ?? []).map((x) => ({ kind: "agent" as const, id: x.id, label: x.name, sub: "Agent" })),
       ];
