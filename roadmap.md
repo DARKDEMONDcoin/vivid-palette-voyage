@@ -23,4 +23,4 @@
 - [ ] Later — brand logo upload, OCR for scanned PDFs, dark theme, 2FA, demo workspace
 
 - [ ] Relink Gmail + Outlook mailbox clients after workspace move (paused by user)
-- [ ] LinkedIn automation via Phantombuster (campaign steps + lead buttons)
+- [x] LinkedIn automation via Phantombuster (campaign steps + lead buttons)
