@@ -140,7 +140,9 @@ export function ApprovalStep({ campaign, onNext }: { campaign: Campaign; onNext:
       const { error } = await supabase.from("messages").update({ status, ...(e ? { subject: e.subject, body: e.body } : {}), approved_at: status === "approved" ? new Date().toISOString() : null, approved_by: status === "approved" ? user.id : null }).eq("id", id);
       if (error) { toast.error(error.message); return; }
     }
-    setEdit({}); qc.invalidateQueries({ queryKey: ["messages", campaign.id] });
+    // Keep unsaved edits on messages that weren't part of this action.
+    setEdit((prev) => Object.fromEntries(Object.entries(prev).filter(([k]) => !ids.includes(k))));
+    qc.invalidateQueries({ queryKey: ["messages", campaign.id] });
   }
   const counts = (msgs.data ?? []).reduce<Record<string, number>>((a, m) => ({ ...a, [m.status]: (a[m.status] ?? 0) + 1 }), {});
   return (
