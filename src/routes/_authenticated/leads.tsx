@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { Ban, Download, Search } from "lucide-react";
 import { PageHeader } from "@/components/app-shell";
@@ -15,6 +15,7 @@ import { LeadTimeline } from "@/components/lead-timeline";
 
 export const Route = createFileRoute("/_authenticated/leads")({
   head: () => ({ meta: [{ title: "Leads — Outreach AI" }, { name: "description", content: "Search, filter and manage every lead in your workspace." }] }),
+  validateSearch: (s: Record<string, unknown>): { q?: string } => (typeof s["q"] === "string" && s["q"] ? { q: s["q"] } : {}),
   component: LeadsPage,
 });
 
@@ -25,7 +26,9 @@ function LeadsPage() {
   const { current, user } = useWorkspace();
   const qc = useQueryClient();
   const ws = current?.workspace_id;
-  const [search, setSearch] = useState("");
+  const { q: initialQ } = Route.useSearch();
+  const [search, setSearch] = useState(initialQ ?? "");
+  useEffect(() => { if (initialQ !== undefined) { setSearch(initialQ); setPage(0); } }, [initialQ]);
   const [campaign, setCampaign] = useState("");
   const [status, setStatus] = useState("");
   const [source, setSource] = useState("");
