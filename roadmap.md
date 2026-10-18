@@ -22,5 +22,5 @@
 - [x] Phase 9 — Settings modules (unsubscribe links, bounces, token/cost metering, email notifications wait on mailbox sending)
 - [ ] Later — brand logo upload, OCR for scanned PDFs, dark theme, 2FA, demo workspace
 
-- [ ] Relink Gmail + Outlook mailbox clients after workspace move
+- [ ] Relink Gmail + Outlook mailbox clients after workspace move (paused by user)
 - [ ] LinkedIn automation via Phantombuster (campaign steps + lead buttons)

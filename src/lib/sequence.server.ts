@@ -32,14 +32,14 @@ export async function slackAlert(admin: Admin, ws: string, text: string) {
 export async function runDue(admin: Admin, limit = 50) {
   const now = new Date();
   const { data: due } = await admin.from("messages")
-    .select("id,channel,subject,body,workspace_id,campaign_id,campaign_lead_id,campaign:campaigns(status,agent_id,language),cl:campaign_leads(status,lead:leads(email,linkedin_url,phone,first_name,last_name,company))")
+    .select("id,channel,linkedin_action,subject,body,workspace_id,campaign_id,campaign_lead_id,campaign:campaigns(status,agent_id,language),cl:campaign_leads(status,lead_id,lead:leads(email,linkedin_url,phone,first_name,last_name,company))")
     .eq("status", "scheduled").lte("scheduled_for", now.toISOString()).order("scheduled_for").limit(limit);
   const out = { sent: 0, waiting: 0, failed: 0, deferred: 0 };
   const agents = new Map<string, Agent | null>();
   const sentToday = new Map<string, number>();
   for (const m of due ?? []) {
     const c = m.campaign as unknown as { status: string; agent_id: string; language: string } | null;
-    const cl = m.cl as unknown as { status: string; lead: Record<string, string | null> } | null;
+    const cl = m.cl as unknown as { status: string; lead_id: string; lead: Record<string, string | null> } | null;
     if (!c || !cl) continue;
     if (c.status !== "active") { out.deferred++; continue; }
     if (cl.status !== "active") { await admin.from("messages").update({ status: "skipped", error: `Lead ${cl.status}` }).eq("id", m.id); continue; }
@@ -68,14 +68,11 @@ export async function runDue(admin: Admin, limit = 50) {
           waiting = result.waiting; error = result.error;
         }
       } else if (m.channel === "linkedin") {
-        const p = await integration(admin, m.workspace_id, "phantombuster");
-        if (!p) { waiting = true; error = "Phantombuster not connected"; }
-        else if (!l["linkedin_url"]) error = "Lead has no LinkedIn URL";
-        else {
-          const r = await fetch("https://api.phantombuster.com/api/v2/agents/launch", { method: "POST", headers: { "X-Phantombuster-Key": p.secret, "Content-Type": "application/json" },
-            body: JSON.stringify({ id: p.config["phantom_id"], argument: { profileUrl: l["linkedin_url"], message: m.body } }) });
-          if (!r.ok) error = `Phantombuster [${r.status}]: ${(await r.text()).slice(0, 200)}`;
-        }
+        const { launchLinkedInAction } = await import("./linkedin.server");
+        const { isLinkedInAction } = await import("./linkedin");
+        const action = isLinkedInAction(m.linkedin_action) ? m.linkedin_action : "message";
+        const result = await launchLinkedInAction(admin, { workspaceId: m.workspace_id, leadId: cl.lead_id, action, profileUrl: l["linkedin_url"] ?? null, text: m.body, messageId: m.id });
+        waiting = result.waiting; error = result.error;
       } else if (m.channel === "call") {
         const v = await integration(admin, m.workspace_id, "vapi");
         const assistant = v ? (c.language === "ar" ? v.config["assistant_ar"] : v.config["assistant_en"]) || v.config["assistant_en"] || v.config["assistant_ar"] : null;
