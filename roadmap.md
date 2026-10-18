@@ -3,7 +3,7 @@
 - [x] Post-import audit — all signed-in pages, details, settings tabs, org create/delete pass; server database key fixed
 - [x] Mailbox encryption key regenerated — user re-links mailboxes
 - [x] Full interactive E2E audit — all modules pass; fixed approval-edit loss, header search, Help menu, "out of_office" labels
-- [ ] Link Gmail / Outlook connector clients to this project — blocked: user must pick clients in the connect card
+- [x] Gmail / Outlook clients linked; connect buttons open Google/Microsoft sign-in (old saved links need reconnect)
 
 - [x] Phase 1 — Auth, workspaces, roles, layout, design
 - [x] Phase 2 — Organizations, documents, RAG, brand summary
