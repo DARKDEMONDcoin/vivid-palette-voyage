@@ -24,3 +24,4 @@
 
 - [ ] Relink Gmail + Outlook mailbox clients after workspace move (paused by user)
 - [x] LinkedIn automation via Phantombuster (campaign steps + lead buttons)
+- [x] Re-audit after LinkedIn: fixed Approval/Launch tabs staying locked

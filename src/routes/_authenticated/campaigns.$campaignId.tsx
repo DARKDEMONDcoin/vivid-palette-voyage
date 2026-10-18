@@ -36,7 +36,8 @@ function CampaignPage() {
       <ol className="mb-6 flex flex-wrap gap-2">
         {STEPS.map((s, i) => {
           const n = i + 1;
-          const enabled = n <= Math.max(c.wizard_step, 5);
+          // Launch is reachable once copy exists; the Launch step itself requires approved messages.
+          const enabled = n <= Math.max(c.wizard_step, 5) || (n === 8 && c.wizard_step >= 7);
           return (
             <li key={s}>
               <button disabled={!enabled} onClick={() => setStep(n)}

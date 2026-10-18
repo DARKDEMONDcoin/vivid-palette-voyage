@@ -111,6 +111,8 @@ export function CopyStep({ campaign, onNext }: { campaign: Campaign; onNext: () 
     }
     failed ? toast.error(`${failed} leads failed: ${last}`) : toast.success("Copy written — review it in Approval");
     setProg(null);
+    // The server unlocks the Approval step; refresh so its tab is clickable right away.
+    qc.invalidateQueries({ queryKey: ["campaign", campaign.id] });
   }
   if (!steps.data?.length) return <div className={`${card} text-sm text-muted-foreground`}>Save the sequence first.</div>;
   return (
@@ -147,6 +149,11 @@ export function ApprovalStep({ campaign, onNext }: { campaign: Campaign; onNext:
     // Keep unsaved edits on messages that weren't part of this action.
     setEdit((prev) => Object.fromEntries(Object.entries(prev).filter(([k]) => !ids.includes(k))));
     qc.invalidateQueries({ queryKey: ["messages", campaign.id] });
+    // Approved copy unlocks the Launch step so its tab stays reachable after a reload.
+    if (status === "approved" && campaign.wizard_step < 8) {
+      await supabase.from("campaigns").update({ wizard_step: 8, updated_at: new Date().toISOString() }).eq("id", campaign.id);
+      qc.invalidateQueries({ queryKey: ["campaign", campaign.id] });
+    }
   }
   const counts = (msgs.data ?? []).reduce<Record<string, number>>((a, m) => ({ ...a, [m.status]: (a[m.status] ?? 0) + 1 }), {});
   return (
