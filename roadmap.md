@@ -25,3 +25,5 @@
 - [ ] Relink Gmail + Outlook mailbox clients after workspace move (paused by user)
 - [x] LinkedIn automation via Phantombuster (campaign steps + lead buttons)
 - [x] Re-audit after LinkedIn: fixed Approval/Launch tabs staying locked
+- [x] Vercel mailbox configuration — validated the database credential, added missing production database and gateway keys, preserved existing connector/encryption keys, and redeployed successfully
+- [ ] Verify mailbox consent on Vercel — blocked: mailbox owner must complete Google/Microsoft consent; authenticated mailbox linking has not been verified on this deployment
