@@ -1,6 +1,7 @@
 # Roadmap
 
-- [ ] Fix mailbox Invalid key length, verify encryption compatibility, and restore the valid production encryption setting on Vercel.
+- [x] Fix mailbox Invalid key length — 16 mailbox tests pass, legacy ciphertext compatibility verified, valid existing 32-byte project encryption setting restored on Vercel, production redeployment READY.
+- [ ] Restore previously registered mailbox grants — live Gmail/Outlook retest now reports a missing stored reconnect credential; encrypted handles cannot be recovered with the current key. Requires provider grant reset or the original encryption setting; completed consent/sending remain unverified.
 
 - [x] Post-import audit — all signed-in pages, details, settings tabs, org create/delete pass; server database key fixed
 - [x] Mailbox encryption key regenerated — user re-links mailboxes
