@@ -25,16 +25,32 @@ export function AgentMailbox({ agentId, workspaceId }: { agentId?: string | unde
     try {
       const result = await start({ data: { agentId, workspaceId, provider } });
       const code = await new Promise<string>((resolve, reject) => {
-        const cleanup = () => { window.removeEventListener("message", receive); window.clearInterval(poll); window.clearTimeout(timeout); };
-        const receive = (event: MessageEvent) => {
-          if (event.origin !== window.location.origin || event.source !== popup || event.data?.type !== "agentMailboxComplete" || event.data?.attemptId !== result.attemptId || event.data?.connectorId !== result.connectorId) return;
+        // Google/Microsoft sign-in pages can cut the link back to this window, so the
+        // return page also reports through same-origin channels (BroadcastChannel / storage).
+        const storageKey = `agent-mailbox-consent:${result.attemptId}`;
+        const channel = typeof BroadcastChannel !== "undefined" ? new BroadcastChannel("agent-mailbox-consent") : null;
+        let closedAt: number | null = null;
+        const cleanup = () => { window.removeEventListener("message", receive); window.removeEventListener("storage", onStorage); channel?.close(); window.clearInterval(poll); window.clearTimeout(timeout); try { localStorage.removeItem(storageKey); } catch { /* ignore */ } };
+        const handle = (data: { type?: unknown; attemptId?: unknown; connectorId?: unknown; success?: unknown; code?: unknown; offlineDisabled?: unknown } | null | undefined) => {
+          if (data?.type !== "agentMailboxComplete" || data.attemptId !== result.attemptId || data.connectorId !== result.connectorId) return;
           cleanup();
-          if (event.data.success && typeof event.data.code === "string" && event.data.code) resolve(event.data.code);
-          else reject(new Error(event.data.offlineDisabled ? "A workspace admin must enable offline access for this mailbox provider" : "Mailbox consent was not completed"));
+          if (data.success && typeof data.code === "string" && data.code) resolve(data.code);
+          else reject(new Error(data.offlineDisabled ? "A workspace admin must enable offline access for this mailbox provider" : "Mailbox consent was not completed"));
         };
-        const poll = window.setInterval(() => { if (popup.closed) { cleanup(); reject(new Error("Mailbox connection cancelled")); } }, 500);
+        const receive = (event: MessageEvent) => { if (event.origin === window.location.origin && event.source === popup) handle(event.data); };
+        const readStored = () => { try { const v = localStorage.getItem(storageKey); if (v) handle(JSON.parse(v)); } catch { /* ignore */ } };
+        const onStorage = (event: StorageEvent) => { if (event.key === storageKey) readStored(); };
+        if (channel) channel.onmessage = (event) => handle(event.data);
+        // Give the return page a moment to report before treating a closed window as cancelled.
+        const poll = window.setInterval(() => {
+          if (!popup.closed) { closedAt = null; return; }
+          readStored();
+          closedAt ??= Date.now();
+          if (Date.now() - closedAt > 2500) { cleanup(); reject(new Error("Mailbox connection cancelled")); }
+        }, 500);
         const timeout = window.setTimeout(() => { cleanup(); reject(new Error("Mailbox connection expired; try again")); }, 600000);
         window.addEventListener("message", receive);
+        window.addEventListener("storage", onStorage);
         popup.location.href = result.authorizationUrl;
       });
       const saved = await complete({ data: { agentId, workspaceId, attemptId: result.attemptId, code } });
