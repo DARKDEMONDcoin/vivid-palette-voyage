@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+import { createCipheriv } from "node:crypto";
 import { canManageMailbox, connectorFor, rawEmail, safeAuthDestination } from "@/lib/mailbox-rules";
 import { encryptKey, decryptKey, checkedJson } from "@/lib/mailbox-gateway.server";
 describe("mailbox permissions", () => {
@@ -21,6 +22,24 @@ describe("mailbox credentials and transport", () => {
     expect(() => decryptKey(stored, Buffer.alloc(32, 8).toString("base64"))).toThrow();
   });
   it("handles Outlook's empty accepted response", async () => expect(await checkedJson(new Response(null, { status: 202 }))).toEqual({}));
+  it("supports generated alphanumeric encryption secrets", () => {
+    const secret = "testGeneratedSecret0123456789ABCD";
+    expect(Buffer.from(secret, "base64").length).not.toBe(32);
+    const stored = encryptKey("test-mailbox-credential", secret);
+    expect(decryptKey(stored, secret)).toBe("test-mailbox-credential");
+    expect(() => decryptKey(stored, `${secret}different`)).toThrow();
+  });
+  it("decrypts existing ciphertext made with a base64 32-byte key", () => {
+    const key = Buffer.alloc(32, 9), iv = Buffer.alloc(12, 3);
+    const cipher = createCipheriv("aes-256-gcm", key, iv);
+    const ciphertext = Buffer.concat([cipher.update("legacy-credential", "utf8"), cipher.final()]);
+    const stored = Buffer.concat([iv, cipher.getAuthTag(), ciphertext]).toString("base64");
+    expect(decryptKey(stored, key.toString("base64"))).toBe("legacy-credential");
+  });
+  it("rejects an empty encryption secret", () => {
+    expect(() => encryptKey("credential", "")).toThrow("Mailbox encryption key is missing");
+    expect(() => encryptKey("credential", "   ")).toThrow("Mailbox encryption key is missing");
+  });
   it("preserves provider errors", async () => expect(checkedJson(new Response("missing scope", { status: 403 }))).rejects.toThrow("[403]: missing scope"));
   it("supports Arabic email bodies and MIME subjects", () => {
     const raw = rawEmail("recipient@example.com", "مرحبا", "رسالة اختبار");

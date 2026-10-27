@@ -1,15 +1,22 @@
-import { createCipheriv, createDecipheriv, randomBytes } from "node:crypto";
+import { createCipheriv, createDecipheriv, createHash, randomBytes } from "node:crypto";
 export const GATEWAY = "https://connector-gateway.lovable.dev";
 export const scopesFor = (connector: string) => connector === "google_mail"
   ? ["https://www.googleapis.com/auth/userinfo.email", "https://www.googleapis.com/auth/gmail.readonly", "https://www.googleapis.com/auth/gmail.send"]
   : ["openid", "profile", "email", "offline_access", "User.Read", "Mail.Read", "Mail.Send"];
+function encryptionKey(secret: string) {
+  if (!secret.trim()) throw new Error("Mailbox encryption key is missing");
+  const decoded = Buffer.from(secret, "base64");
+  // Preserve existing ciphertext for provisioned 32-byte base64 keys.
+  // Generated app secrets are strings, so derive a stable 256-bit key otherwise.
+  return decoded.length === 32 ? decoded : createHash("sha256").update(secret, "utf8").digest();
+}
 export function encryptKey(plaintext: string, secret: string) {
-  const iv = randomBytes(12), cipher = createCipheriv("aes-256-gcm", Buffer.from(secret, "base64"), iv);
+  const iv = randomBytes(12), cipher = createCipheriv("aes-256-gcm", encryptionKey(secret), iv);
   const ct = Buffer.concat([cipher.update(plaintext, "utf8"), cipher.final()]);
   return Buffer.concat([iv, cipher.getAuthTag(), ct]).toString("base64");
 }
 export function decryptKey(stored: string, secret: string) {
-  const buf = Buffer.from(stored, "base64"), decipher = createDecipheriv("aes-256-gcm", Buffer.from(secret, "base64"), buf.subarray(0, 12));
+  const buf = Buffer.from(stored, "base64"), decipher = createDecipheriv("aes-256-gcm", encryptionKey(secret), buf.subarray(0, 12));
   decipher.setAuthTag(buf.subarray(12, 28));
   return Buffer.concat([decipher.update(buf.subarray(28)), decipher.final()]).toString("utf8");
 }

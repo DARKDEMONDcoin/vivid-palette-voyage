@@ -1,5 +1,7 @@
 # Roadmap
 
+- [ ] Fix mailbox Invalid key length, verify encryption compatibility, and restore the valid production encryption setting on Vercel.
+
 - [x] Post-import audit — all signed-in pages, details, settings tabs, org create/delete pass; server database key fixed
 - [x] Mailbox encryption key regenerated — user re-links mailboxes
 - [x] Full interactive E2E audit — all modules pass; fixed approval-edit loss, header search, Help menu, "out of_office" labels
