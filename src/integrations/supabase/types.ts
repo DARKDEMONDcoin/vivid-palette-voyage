@@ -503,6 +503,771 @@ export type Database = {
           },
         ]
       }
+      ct_credit_packages: {
+        Row: {
+          bonus_credits: number
+          created_at: string
+          credits: number
+          display_order: number
+          id: string
+          is_active: boolean
+          is_popular: boolean
+          name: string
+          price_usd: number
+          updated_at: string
+        }
+        Insert: {
+          bonus_credits?: number
+          created_at?: string
+          credits: number
+          display_order?: number
+          id?: string
+          is_active?: boolean
+          is_popular?: boolean
+          name: string
+          price_usd: number
+          updated_at?: string
+        }
+        Update: {
+          bonus_credits?: number
+          created_at?: string
+          credits?: number
+          display_order?: number
+          id?: string
+          is_active?: boolean
+          is_popular?: boolean
+          name?: string
+          price_usd?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      ct_credit_rates: {
+        Row: {
+          credits_per_word: number
+          description: string | null
+          id: string
+          label: string
+          updated_at: string
+          workflow_type: string
+        }
+        Insert: {
+          credits_per_word: number
+          description?: string | null
+          id?: string
+          label: string
+          updated_at?: string
+          workflow_type: string
+        }
+        Update: {
+          credits_per_word?: number
+          description?: string | null
+          id?: string
+          label?: string
+          updated_at?: string
+          workflow_type?: string
+        }
+        Relationships: []
+      }
+      ct_credit_transactions: {
+        Row: {
+          amount: number
+          breakdown_json: Json | null
+          created_at: string
+          description: string | null
+          id: string
+          organization_id: string
+          related_project_id: string | null
+          stripe_payment_intent_id: string | null
+          type: string
+        }
+        Insert: {
+          amount: number
+          breakdown_json?: Json | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          organization_id: string
+          related_project_id?: string | null
+          stripe_payment_intent_id?: string | null
+          type: string
+        }
+        Update: {
+          amount?: number
+          breakdown_json?: Json | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          organization_id?: string
+          related_project_id?: string | null
+          stripe_payment_intent_id?: string | null
+          type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ct_credit_transactions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "ct_organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ct_credit_transactions_related_project_id_fkey"
+            columns: ["related_project_id"]
+            isOneToOne: false
+            referencedRelation: "ct_projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ct_documents: {
+        Row: {
+          created_at: string
+          detected_doc_type: string | null
+          detected_language: string | null
+          file_type: string
+          id: string
+          layout_html: string | null
+          original_file_url: string
+          original_filename: string
+          processing_status: string
+          project_id: string
+          structured_data: Json | null
+          translated_file_url: string | null
+          word_count: number
+        }
+        Insert: {
+          created_at?: string
+          detected_doc_type?: string | null
+          detected_language?: string | null
+          file_type: string
+          id?: string
+          layout_html?: string | null
+          original_file_url: string
+          original_filename: string
+          processing_status?: string
+          project_id: string
+          structured_data?: Json | null
+          translated_file_url?: string | null
+          word_count?: number
+        }
+        Update: {
+          created_at?: string
+          detected_doc_type?: string | null
+          detected_language?: string | null
+          file_type?: string
+          id?: string
+          layout_html?: string | null
+          original_file_url?: string
+          original_filename?: string
+          processing_status?: string
+          project_id?: string
+          structured_data?: Json | null
+          translated_file_url?: string | null
+          word_count?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ct_documents_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "ct_projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ct_in_app_notifications: {
+        Row: {
+          body: string
+          created_at: string
+          event_key: string
+          id: string
+          is_read: boolean
+          link: string | null
+          priority: string
+          read_at: string | null
+          title: string
+          user_id: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          event_key: string
+          id?: string
+          is_read?: boolean
+          link?: string | null
+          priority?: string
+          read_at?: string | null
+          title: string
+          user_id: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          event_key?: string
+          id?: string
+          is_read?: boolean
+          link?: string | null
+          priority?: string
+          read_at?: string | null
+          title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      ct_jobs: {
+        Row: {
+          accepted_at: string | null
+          audit_report_url: string | null
+          breakdown_json: Json | null
+          business_share: number | null
+          completed_at: string | null
+          created_at: string
+          exclusive_until: string | null
+          id: string
+          linguist_id: string | null
+          linguist_source: string
+          payout_amount: number | null
+          project_id: string
+          source_language: string
+          status: string
+          target_language: string
+          word_count: number
+        }
+        Insert: {
+          accepted_at?: string | null
+          audit_report_url?: string | null
+          breakdown_json?: Json | null
+          business_share?: number | null
+          completed_at?: string | null
+          created_at?: string
+          exclusive_until?: string | null
+          id?: string
+          linguist_id?: string | null
+          linguist_source?: string
+          payout_amount?: number | null
+          project_id: string
+          source_language: string
+          status?: string
+          target_language: string
+          word_count?: number
+        }
+        Update: {
+          accepted_at?: string | null
+          audit_report_url?: string | null
+          breakdown_json?: Json | null
+          business_share?: number | null
+          completed_at?: string | null
+          created_at?: string
+          exclusive_until?: string | null
+          id?: string
+          linguist_id?: string | null
+          linguist_source?: string
+          payout_amount?: number | null
+          project_id?: string
+          source_language?: string
+          status?: string
+          target_language?: string
+          word_count?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ct_jobs_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "ct_projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ct_organizations: {
+        Row: {
+          company_bio: string | null
+          created_at: string
+          credit_balance: number
+          credits_reset_at: string | null
+          id: string
+          industry: string | null
+          name: string
+          plan: string
+          slug: string
+          stripe_customer_id: string | null
+          stripe_subscription_id: string | null
+          updated_at: string
+          website_url: string | null
+        }
+        Insert: {
+          company_bio?: string | null
+          created_at?: string
+          credit_balance?: number
+          credits_reset_at?: string | null
+          id?: string
+          industry?: string | null
+          name: string
+          plan?: string
+          slug: string
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          updated_at?: string
+          website_url?: string | null
+        }
+        Update: {
+          company_bio?: string | null
+          created_at?: string
+          credit_balance?: number
+          credits_reset_at?: string | null
+          id?: string
+          industry?: string | null
+          name?: string
+          plan?: string
+          slug?: string
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          updated_at?: string
+          website_url?: string | null
+        }
+        Relationships: []
+      }
+      ct_page_meta: {
+        Row: {
+          canonical: string | null
+          description: string | null
+          locale: string
+          no_index: boolean
+          og_description: string | null
+          og_image: string | null
+          og_title: string | null
+          page_key: string
+          title: string | null
+          updated_at: string
+        }
+        Insert: {
+          canonical?: string | null
+          description?: string | null
+          locale?: string
+          no_index?: boolean
+          og_description?: string | null
+          og_image?: string | null
+          og_title?: string | null
+          page_key: string
+          title?: string | null
+          updated_at?: string
+        }
+        Update: {
+          canonical?: string | null
+          description?: string | null
+          locale?: string
+          no_index?: boolean
+          og_description?: string | null
+          og_image?: string | null
+          og_title?: string | null
+          page_key?: string
+          title?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      ct_plan_config: {
+        Row: {
+          created_at: string
+          credits_per_cycle: number
+          cta_href: string
+          cta_text: string
+          description: string | null
+          description_ar: string | null
+          display_order: number
+          features: string[]
+          features_ar: string[]
+          id: string
+          is_active: boolean
+          is_popular: boolean
+          limits_json: Json | null
+          name: string
+          name_ar: string | null
+          period: string
+          price: number
+          slug: string
+          stripe_price_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          credits_per_cycle?: number
+          cta_href?: string
+          cta_text?: string
+          description?: string | null
+          description_ar?: string | null
+          display_order?: number
+          features?: string[]
+          features_ar?: string[]
+          id?: string
+          is_active?: boolean
+          is_popular?: boolean
+          limits_json?: Json | null
+          name: string
+          name_ar?: string | null
+          period?: string
+          price?: number
+          slug: string
+          stripe_price_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          credits_per_cycle?: number
+          cta_href?: string
+          cta_text?: string
+          description?: string | null
+          description_ar?: string | null
+          display_order?: number
+          features?: string[]
+          features_ar?: string[]
+          id?: string
+          is_active?: boolean
+          is_popular?: boolean
+          limits_json?: Json | null
+          name?: string
+          name_ar?: string | null
+          period?: string
+          price?: number
+          slug?: string
+          stripe_price_id?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      ct_plan_features: {
+        Row: {
+          enabled: boolean
+          feature: string
+          id: string
+          plan_slug: string
+          updated_at: string
+        }
+        Insert: {
+          enabled?: boolean
+          feature: string
+          id?: string
+          plan_slug: string
+          updated_at?: string
+        }
+        Update: {
+          enabled?: boolean
+          feature?: string
+          id?: string
+          plan_slug?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      ct_profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          email: string
+          name: string | null
+          organization_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          email: string
+          name?: string | null
+          organization_id?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          email?: string
+          name?: string | null
+          organization_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ct_profiles_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "ct_organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ct_projects: {
+        Row: {
+          attached_glossary_ids: string[]
+          attached_style_guide_ids: string[]
+          attached_tm_ids: string[]
+          client_id: string
+          created_at: string
+          due_date: string | null
+          id: string
+          name: string
+          notes: string | null
+          ocr_confidence_warning: boolean
+          organization_id: string
+          source_language: string
+          status: string
+          target_languages: string[]
+          total_word_count: number
+          updated_at: string
+          workflow_type: string
+        }
+        Insert: {
+          attached_glossary_ids?: string[]
+          attached_style_guide_ids?: string[]
+          attached_tm_ids?: string[]
+          client_id: string
+          created_at?: string
+          due_date?: string | null
+          id?: string
+          name: string
+          notes?: string | null
+          ocr_confidence_warning?: boolean
+          organization_id: string
+          source_language: string
+          status?: string
+          target_languages?: string[]
+          total_word_count?: number
+          updated_at?: string
+          workflow_type?: string
+        }
+        Update: {
+          attached_glossary_ids?: string[]
+          attached_style_guide_ids?: string[]
+          attached_tm_ids?: string[]
+          client_id?: string
+          created_at?: string
+          due_date?: string | null
+          id?: string
+          name?: string
+          notes?: string | null
+          ocr_confidence_warning?: boolean
+          organization_id?: string
+          source_language?: string
+          status?: string
+          target_languages?: string[]
+          total_word_count?: number
+          updated_at?: string
+          workflow_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ct_projects_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "ct_organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ct_resource_articles: {
+        Row: {
+          audiences: string[]
+          author_id: string | null
+          body: string
+          category_id: string | null
+          content_type: string
+          created_at: string
+          excerpt: string | null
+          featured: boolean
+          icon: string | null
+          id: string
+          meta_description: string | null
+          related_ids: string[]
+          seo_title: string | null
+          slug: string
+          sort_order: number
+          status: string
+          subtitle: string | null
+          tags: string[]
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          audiences?: string[]
+          author_id?: string | null
+          body?: string
+          category_id?: string | null
+          content_type?: string
+          created_at?: string
+          excerpt?: string | null
+          featured?: boolean
+          icon?: string | null
+          id?: string
+          meta_description?: string | null
+          related_ids?: string[]
+          seo_title?: string | null
+          slug: string
+          sort_order?: number
+          status?: string
+          subtitle?: string | null
+          tags?: string[]
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          audiences?: string[]
+          author_id?: string | null
+          body?: string
+          category_id?: string | null
+          content_type?: string
+          created_at?: string
+          excerpt?: string | null
+          featured?: boolean
+          icon?: string | null
+          id?: string
+          meta_description?: string | null
+          related_ids?: string[]
+          seo_title?: string | null
+          slug?: string
+          sort_order?: number
+          status?: string
+          subtitle?: string | null
+          tags?: string[]
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ct_resource_articles_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "ct_resource_categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ct_resource_categories: {
+        Row: {
+          color: string | null
+          created_at: string
+          description: string | null
+          icon: string | null
+          id: string
+          is_visible: boolean
+          name: string
+          slug: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          color?: string | null
+          created_at?: string
+          description?: string | null
+          icon?: string | null
+          id?: string
+          is_visible?: boolean
+          name: string
+          slug: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          color?: string | null
+          created_at?: string
+          description?: string | null
+          icon?: string | null
+          id?: string
+          is_visible?: boolean
+          name?: string
+          slug?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      ct_resource_faq_items: {
+        Row: {
+          answer: string
+          audiences: string[]
+          category_id: string | null
+          created_at: string
+          featured: boolean
+          id: string
+          question: string
+          sort_order: number
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          answer: string
+          audiences?: string[]
+          category_id?: string | null
+          created_at?: string
+          featured?: boolean
+          id?: string
+          question: string
+          sort_order?: number
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          answer?: string
+          audiences?: string[]
+          category_id?: string | null
+          created_at?: string
+          featured?: boolean
+          id?: string
+          question?: string
+          sort_order?: number
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ct_resource_faq_items_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "ct_resource_categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ct_site_config: {
+        Row: {
+          key: string
+          updated_at: string
+          value: Json
+        }
+        Insert: {
+          key: string
+          updated_at?: string
+          value: Json
+        }
+        Update: {
+          key?: string
+          updated_at?: string
+          value?: Json
+        }
+        Relationships: []
+      }
+      ct_user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["ct_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["ct_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["ct_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
       document_chunks: {
         Row: {
           chunk_index: number
@@ -1421,6 +2186,14 @@ export type Database = {
       can_edit_campaign: { Args: { _c: string }; Returns: boolean }
       can_edit_org: { Args: { _org: string }; Returns: boolean }
       create_workspace: { Args: { _name: string }; Returns: string }
+      ct_has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["ct_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
+      ct_user_org: { Args: { _uid: string }; Returns: string }
       has_ws_role: {
         Args: { _role: Database["public"]["Enums"]["app_role"]; _ws: string }
         Returns: boolean
@@ -1443,6 +2216,7 @@ export type Database = {
     }
     Enums: {
       app_role: "super_admin" | "standard" | "viewer"
+      ct_role: "CLIENT" | "LINGUIST" | "ADMIN"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -1571,6 +2345,7 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["super_admin", "standard", "viewer"],
+      ct_role: ["CLIENT", "LINGUIST", "ADMIN"],
     },
   },
 } as const
